@@ -19,18 +19,18 @@ __author__ = 'Theo'
 #   1 = Occupied space
 
 grid = [[0, 0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0],
-        [0, 0, 1, 1, 1, 0],
-        [0, 0, 0, 0, 1, 0]]
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 1, 0]]
 
 init = [0, 0]
-goal = [len(grid)-1, len(grid[0])-1] # Make sure that the goal definition stays in the function.
+goal = [len(grid) - 1, len(grid[0]) - 1] # Make sure that the goal definition stays in the function.
 
-delta = [[-1, 0 ], # go up
-        [ 0, -1], # go left
-        [ 1, 0 ], # go down
-        [ 0, 1 ]] # go right
+delta = [[-1, 0], # go up
+    [0, -1], # go left
+    [1, 0], # go down
+    [0, 1]] # go right
 
 delta_name = ['^', '<', 'v', '>']
 
@@ -46,24 +46,19 @@ def search():
     nextValue = initVal
     while current != goal:
         visited.append([current[0], current[1]])
-        print 'visited ', visited
+        #        print 'visited ', visited
         next = successors(current, visited)
-        print 'next ', next
-#        print 'Before remove', open
-#        print 'To remove', length, current[0], current[1]
         open.remove(nextValue)
-#        print 'old length', length
-        length += cost
-        print 'new length ', length
         for node in next:
             if (not isAlreadyOpen(open, node)):
-                open.append([length, node[0], node[1]])
-        print 'New open', open
+                open.append([nextValue[0] + cost, node[0], node[1]])
+        if not open:
+            return  'fail'
+        #        print 'open', open
         nextValue = min(open)
-        print 'next value', nextValue
         current = [nextValue[1], nextValue[2]]
-        print 'New current', current
-        print ''
+    #        print 'current', current
+    return nextValue
 
 
 def successors(current, visited):
@@ -75,9 +70,11 @@ def successors(current, visited):
             result.append([newX, newY])
     return result
 
+
 def isRightPoint(x, y, visited):
-    return  (x >= 0) and (x < len(grid)) and (y >= 0) and (y < len(grid[0])) and (grid[x][y] == 0) \
+    return  (x >= 0) and (x < len(grid)) and (y >= 0) and (y < len(grid[0])) and (grid[x][y] == 0)\
     and ([x, y] not in visited)
+
 
 def isAlreadyOpen(open, current):
     for node in open:
@@ -85,4 +82,4 @@ def isAlreadyOpen(open, current):
             return True
     return False
 
-search()
+print search()
