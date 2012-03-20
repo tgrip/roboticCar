@@ -139,17 +139,23 @@ class robot:
 # run - does a single control run
 
 
-def run(param):
+def run(param1, param2, param3):
     myrobot = robot()
     myrobot.set(0.0, 1.0, 0.0)
+    myrobot.set_steering_drift(10.0 / 180.0 * pi)
     speed = 1.0 # motion distance is equal to speed (we assume time = 1)
     N = 100
     #
     # Add Code Here
     #
+    diffCTE = 0
+    sumCTE = 0
     for i in range(N):
-        steeringAngle = param * -myrobot.y
+        cte = myrobot.y
+        sumCTE += cte
+        steeringAngle = -param1 * cte - param2 * diffCTE - param3 * sumCTE
         myrobot = myrobot.move(steeringAngle, speed)
+        diffCTE = myrobot.y - cte
         print myrobot, steeringAngle
 
-run(0.3) # call function with parameter tau of 0.1 and print results
+run(0.2, 3.0, 0.004) # call function with parameter tau of 0.1 and print results
